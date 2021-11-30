@@ -1,0 +1,42 @@
+<div *ngIf="Players; else noPlayers">
+  <div *ngFor="let player of Players">
+    {{ player.Name }}:
+    <span *ngFor="let card of player.Cards">
+      <img height="16px" width="16px" src="{{ GetIconForSuit(card.Suit) }}" />
+      {{ card.Figure }}
+    </span>
+  </div>
+</div>
+
+<ng-template #noPlayers>
+  Add players and cards to deal or shuffle the deck!
+</ng-template>
+
+<form (ngSubmit)="Deal()" [formGroup]="InputForm">
+  <select class="custom-select" formControlName="PlayerInput">
+    <option value="" disabled>Choose Player Amount</option>
+    <option *ngFor="let input of PlayerAndCardInputs" [ngValue]="input">
+      {{ input }}
+    </option>
+  </select>
+  <select class="custom-select" formControlName="NumberCardInput">
+    <option value="" disabled>Choose Amount of Cards To Deal</option>
+    <option *ngFor="let input of PlayerAndCardInputs" [ngValue]="input">
+      {{ input }}
+    </option>
+  </select>
+  <br />
+  <button type="submit">Deal!</button>
+  <button (click)="InitializeDeck(true, false); Deal()" type="button">
+    Shuffle (And Re-Deal)
+  </button>
+  <button (click)="InitializeDeck(true, true)" type="button">
+    Reset Deck and Shuffle
+  </button>
+</form>
+
+<div>Number of cards left in the deck: {{ Cards.size() }}</div>
+
+<div *ngIf="Error">
+  {{ Error }}
+</div>
